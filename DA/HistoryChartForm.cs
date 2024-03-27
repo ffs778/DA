@@ -53,7 +53,6 @@ namespace DA
                 _sampleRate = _timerLabelArray.Length;
                 toolTipsShow_cbx.Enabled = false;
                 timeTips_lab.Visible = true;
-                MessageBox.Show("加载大数据正在进行图标优化");
             }
 
         }
