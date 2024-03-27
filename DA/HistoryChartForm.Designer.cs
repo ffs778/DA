@@ -35,12 +35,14 @@ namespace DA
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.formsPlot1 = new ScottPlot.FormsPlot();
+            this.toolTipsShow_cbx = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.toolTipsShow_cbx);
             this.panel2.Controls.Add(this.allSelect_cbx);
             this.panel2.Controls.Add(this.paramList_flPanel);
             this.panel2.Controls.Add(this.label1);
@@ -94,7 +96,20 @@ namespace DA
             this.formsPlot1.Name = "formsPlot1";
             this.formsPlot1.Size = new System.Drawing.Size(1904, 760);
             this.formsPlot1.TabIndex = 0;
-            this.formsPlot1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.formsPlot1_MouseMove);
+            this.formsPlot1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormsPlot1_MouseMove);
+            // 
+            // toolTipsShow_cbx
+            // 
+            this.toolTipsShow_cbx.AutoSize = true;
+            this.toolTipsShow_cbx.Checked = true;
+            this.toolTipsShow_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolTipsShow_cbx.Location = new System.Drawing.Point(49, 157);
+            this.toolTipsShow_cbx.Name = "toolTipsShow_cbx";
+            this.toolTipsShow_cbx.Size = new System.Drawing.Size(135, 21);
+            this.toolTipsShow_cbx.TabIndex = 12;
+            this.toolTipsShow_cbx.Text = "显示图标数据提示框";
+            this.toolTipsShow_cbx.UseVisualStyleBackColor = true;
+            this.toolTipsShow_cbx.CheckedChanged += new System.EventHandler(this.TooltipsShow_cbx_CheckedChanged);
             // 
             // HistoryChartForm
             // 
@@ -118,6 +133,7 @@ namespace DA
         private System.Windows.Forms.CheckBox allSelect_cbx;
         private System.Windows.Forms.Panel panel1;
         private ScottPlot.FormsPlot formsPlot1;
+        private System.Windows.Forms.CheckBox toolTipsShow_cbx;
     }
 }
 

@@ -198,8 +198,6 @@ namespace DA
             }
         }
         #endregion
-       
-
 
         /// <summary>
         /// 根据元素数量生成位置数组
@@ -216,10 +214,13 @@ namespace DA
             return tempList.ToArray();
         }
 
+        #region 显示ToolTips
 
         List<Tooltip> _tipsList = new();
-        private void formsPlot1_MouseMove(object sender, MouseEventArgs e)
+        bool _isShowTooltips = true;    // 默认显示
+        private void FormsPlot1_MouseMove(object sender, MouseEventArgs e)
         {
+            if (!_isShowTooltips) return;
             RemoveToolTips();
             (double mouseCoordX, double mouseCoordY) = formsPlot1.GetMouseCoordinates();
             double xyRatio = formsPlot1.Plot.XAxis.Dims.PxPerUnit / formsPlot1.Plot.YAxis.Dims.PxPerUnit;
@@ -246,6 +247,18 @@ namespace DA
                 }
             }
         }
+        /// <summary>
+        /// 切换显示ToolTips，避免遮挡数据点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TooltipsShow_cbx_CheckedChanged(object sender, EventArgs e)
+        {
+            _isShowTooltips = toolTipsShow_cbx.Checked;
+            if (!_isShowTooltips) RemoveToolTips();//如果不显示，则移除现有ToolTips
+            formsPlot1.Refresh();
+        }
+        #endregion
     }
 }
 
