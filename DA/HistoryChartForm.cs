@@ -16,12 +16,10 @@ namespace DA
     {
         public Plot _plot;  // 图表  
         public string[] _timerLabelArray;//时间描述
-        List<Text[]> _paramsTextArrayList;// 标签
         List<double[]> _paramValueArrayList;// 值
         List<SignalPlot> _paramSigList; // 折线
         List<int> _seletList;//选中参数的索引
         string _cavityName;
-        VLine _vLine;   // 标记线
 
         public HistoryChartForm(ChartFormParamModel model)
         {
@@ -32,8 +30,6 @@ namespace DA
             InitialDataFlowPanel(model.ChartDataModels.AsEnumerable().Select(x => x.Description).ToArray());
             InitialData(model.ChartDataModels, model.Labels);
             InitialCreateAllSig();
-            _vLine = CreateVLine();
-            _plot.Add(_vLine);
             var firstPower = paramList_flPanel.Controls[0] as CheckBox;
             firstPower.Checked = true;
             InitialPlot(_timerLabelArray.Length);
@@ -70,6 +66,7 @@ namespace DA
             //var legend = _plot.Legend();
             //legend.FontSize = 15;
             _plot.Title($"历史数据折线图表");
+            _plot.XAxis.Ticks(false);   // 不显示横轴标签
         }
 
         #endregion
@@ -81,11 +78,9 @@ namespace DA
         private void InitialCreateAllSig()
         {
             _paramSigList = new(_paramValueArrayList.Count);
-            _paramsTextArrayList = new(_paramValueArrayList.Count);
             for (int i = 0; i < _paramValueArrayList.Count; i++)
             {
                 _paramSigList.Add(CreateSig(_paramValueArrayList[i], ColorTranslator.FromHtml(Palette.HexDeepColors[i % Palette.HexDeepColors.Length]), _plot.YAxis.AxisIndex, null));
-                _paramsTextArrayList.Add(CreateSigText(_paramValueArrayList[i], ColorTranslator.FromHtml(Palette.HexDeepColors[i % Palette.HexDeepColors.Length]), _plot.YAxis.AxisIndex));
             }
         }
         /// <summary>
@@ -103,28 +98,6 @@ namespace DA
             sig.Color = sigColor; // 折线颜色
             sig.IsVisible = false;//初始化不可见
             return sig;
-        }
-        /// <summary>
-        /// 创建标签
-        /// </summary>
-        /// <param name="dataArray"></param>
-        /// <param name="textColor"></param>
-        /// <param name="axisIndex"></param>
-        /// <returns></returns>
-        public Text[] CreateSigText(double[] dataArray, Color textColor, int axisIndex)
-        {
-            Text[] texts = new Text[dataArray.Length];
-            for (int i = 0; i < dataArray.Length; i++)
-            {
-                var txt = _plot.AddText(dataArray[i].ToString(), i, dataArray[i]);  // 在坐标轴位置放置指定文本
-                txt.Alignment = Alignment.LowerCenter;
-                txt.YAxisIndex = axisIndex;
-                txt.FontSize = 15;
-                txt.Color = textColor;   // 数值颜色
-                txt.IsVisible = false;  // 初始化数据不可见
-                texts[i] = txt;
-            }
-            return texts;
         }
         #endregion
 
@@ -159,6 +132,7 @@ namespace DA
         /// <param name="e"></param>
         private void CheckBox_CheckStateChanged(object sender, EventArgs e)
         {
+            RemoveToolTips();
             // 显示和隐藏曲线
             var checkBox = sender as CheckBox;
             if (_paramSigList == null)
@@ -168,7 +142,6 @@ namespace DA
             }
             int paramIndex = Convert.ToInt32(checkBox.Tag); // 获得当前点击的参数索引
             _paramSigList[paramIndex].IsVisible = checkBox.Checked; // 参数曲线的可见性
-            ValueLabelVisible(_paramsTextArrayList[paramIndex], _paramSigList[paramIndex].IsVisible && valueVisible_cbx.Checked);
 
             // 记录/移除当前勾选的索引
             if (checkBox.Checked)
@@ -182,29 +155,6 @@ namespace DA
             // 刷新图表
             _plot.AxisAuto();
             formsPlot1.Refresh();
-        }
-        #endregion
-
-        #region 显示数值
-        private void ValueVisible_cbx_CheckedChanged(object sender, EventArgs e)
-        {
-            for (int i = 0; i < _seletList.Count; i++)
-            {
-                ValueLabelVisible(_paramsTextArrayList[_seletList[i]], valueVisible_cbx.Checked);
-            }
-            formsPlot1.Refresh();
-        }
-        /// <summary>
-        /// 折线标签可见性
-        /// </summary>
-        /// <param name="lineText"></param>
-        /// <param name="isVisible"></param>
-        public static void ValueLabelVisible(Text[] lineText, bool isVisible)
-        {
-            foreach (var item in lineText)
-            {
-                item.IsVisible = isVisible;
-            }
         }
         #endregion
 
@@ -228,14 +178,10 @@ namespace DA
             InitialCreateAllSig();
             var positions = GetPositions(_timerLabelArray.Length);
             _plot.XTicks(positions, _timerLabelArray);  // X轴刻度添加对应的标签
-            _vLine = CreateVLine();
-            _plot.Add(_vLine);
             // 保持当前勾选项的状态
             for (int i = 0; i < _seletList.Count; i++)
             {
                 _paramSigList[_seletList[i]].IsVisible = true;
-                // 根据线的可见性，处理数据标签的可见性
-                ValueLabelVisible(_paramsTextArrayList[_seletList[i]], valueVisible_cbx.Checked);
             }
             InitialPlot(_timerLabelArray.Length);
             formsPlot1.Refresh();
@@ -245,26 +191,14 @@ namespace DA
         #region 全选
         private void AllSelect_cbx_CheckedChanged(object sender, EventArgs e)
         {
-            AllSelect();
-        }
-        private void AllSelect()
-        {
+            RemoveToolTips();
             foreach (CheckBox checkBox in paramList_flPanel.Controls)
             {
                 checkBox.Checked = allSelect_cbx.Checked;   // 所有热丝的选中状态与全选框保持一致
             }
         }
         #endregion
-        /// <summary>
-        /// 标记线切换显示
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void VLine_cbx_CheckedChanged(object sender, EventArgs e)
-        {
-            _vLine.IsVisible = VLine_cbx.Checked;
-            formsPlot1.Refresh();
-        }
+       
 
 
         /// <summary>
@@ -283,37 +217,35 @@ namespace DA
         }
 
 
-        #region 添加标记线
-        private VLine CreateVLine()
+        List<Tooltip> _tipsList = new();
+        private void formsPlot1_MouseMove(object sender, MouseEventArgs e)
         {
-            var vLine = new VLine()
+            RemoveToolTips();
+            (double mouseCoordX, double mouseCoordY) = formsPlot1.GetMouseCoordinates();
+            double xyRatio = formsPlot1.Plot.XAxis.Dims.PxPerUnit / formsPlot1.Plot.YAxis.Dims.PxPerUnit;
+            for (int i = 0; i < _paramSigList.Count; i++)
             {
-                X = 0,
-                Label = "",
-                PositionLabelOppositeAxis = true,
-                PositionLabelAxis = _plot.XAxis,
-                PositionFormatter = GetVLineLabel,
-                PositionLabel = true,          // 是否在轴上标记线对应的值
-                DragEnabled = true,            // 是否允许拖动
-                IsVisible = VLine_cbx.Checked
-            };
-            return vLine;
+                if (!_paramSigList[i].IsVisible) continue;
+                (double pointX, double pointY, int pointIndex) = _paramSigList[i].GetPointNearestX(mouseCoordX);
+                _tipsList.Add(_plot.AddTooltip($"" +
+                    $"类型：{paramList_flPanel.Controls[i].Text}{Environment.NewLine}" +
+                    $"数据：{pointY}{ Environment.NewLine}" +
+                    $"时间：{_timerLabelArray[pointIndex]}", x: pointIndex, y: pointY));
+            }
         }
-        private string GetVLineLabel(double position)
+        /// <summary>
+        /// 移除图标中的tooltips
+        /// </summary>
+        private void RemoveToolTips()
         {
-            if (_timerLabelArray.Length == 0) return "";
-            var index = Convert.ToInt32(position);
-            if (index <= 0)
+            if (_tipsList.Count > 0)
             {
-                return _timerLabelArray[0];
+                for (int i = 0; i < _tipsList.Count; i++)
+                {
+                    _plot.Remove(_tipsList[i]);
+                }
             }
-            else if (index > _timerLabelArray.Length - 1)
-            {
-                return _timerLabelArray[_timerLabelArray.Length - 1];
-            }
-            return _timerLabelArray[index];
         }
-        #endregion
     }
 }
 
