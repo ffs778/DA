@@ -20,6 +20,7 @@ namespace DA
         List<SignalPlot> _paramSigList; // 折线
         List<int> _seletList;//选中参数的索引
         string _cavityName;
+        double _sampleRate = 1;
 
         public HistoryChartForm(ChartFormParamModel model)
         {
@@ -46,6 +47,15 @@ namespace DA
             {
                 _paramValueArrayList.Add(model[i].Data);
             }
+            // 3. 定采样率
+            if (_timerLabelArray.Length > 3000)
+            {
+                _sampleRate = _timerLabelArray.Length;
+                toolTipsShow_cbx.Enabled = false;
+                timeTips_lab.Visible = true;
+                MessageBox.Show("加载大数据正在进行图标优化");
+            }
+
         }
         #endregion
 
@@ -93,7 +103,7 @@ namespace DA
         /// <returns></returns>
         public SignalPlot CreateSig(double[] dataArray, Color sigColor, int axisIndex, string label)
         {
-            var sig = _plot.AddSignal(dataArray, label: label);
+            var sig = _plot.AddSignal(dataArray, label: label, sampleRate: _sampleRate);
             sig.YAxisIndex = axisIndex;    // 折线图绑定轴
             sig.Color = sigColor; // 折线颜色
             sig.IsVisible = false;//初始化不可见
@@ -223,16 +233,18 @@ namespace DA
             if (!_isShowTooltips) return;
             RemoveToolTips();
             (double mouseCoordX, double mouseCoordY) = formsPlot1.GetMouseCoordinates();
-            double xyRatio = formsPlot1.Plot.XAxis.Dims.PxPerUnit / formsPlot1.Plot.YAxis.Dims.PxPerUnit;
             for (int i = 0; i < _paramSigList.Count; i++)
             {
                 if (!_paramSigList[i].IsVisible) continue;
                 (double pointX, double pointY, int pointIndex) = _paramSigList[i].GetPointNearestX(mouseCoordX);
-                _tipsList.Add(_plot.AddTooltip($"" +
+                string msg = $"" +
                     $"类型：{paramList_flPanel.Controls[i].Text}{Environment.NewLine}" +
                     $"数据：{pointY}{ Environment.NewLine}" +
-                    $"时间：{_timerLabelArray[pointIndex]}", x: pointIndex, y: pointY));
+                    $"时间：{_timerLabelArray[pointIndex]}";
+                _tipsList.Add(_plot.AddTooltip(msg, x: pointIndex, y: pointY));
+                timeTips_lab.Text = $"时间：{_timerLabelArray[pointIndex]}";
             }
+            formsPlot1.Refresh();
         }
         /// <summary>
         /// 移除图标中的tooltips
