@@ -180,8 +180,10 @@ namespace DA
             chart1Data_picb.Image = Properties.Resources.chart2Selected;
             pager1.Visible = false;
             collectData_dgv.Visible = false;
-            chartform = new HistoryChartForm(GetChartFormParamModel());
-            ShowChartForm(chartform);
+            MaskLayer.CreateMask(this, new Point(0, flowLayoutPanel1.Height), this.Size);   // 添加遮罩层
+            MaskLayer.LoadingFunction(this,
+                new Action(() => { chartform = new HistoryChartForm(GetChartFormParamModel()); }),
+                new Action(() => ShowChartForm(chartform)));
         }
         #endregion
 
