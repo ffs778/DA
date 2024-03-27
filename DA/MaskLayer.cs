@@ -22,7 +22,7 @@ namespace DA
             {
                 await Task.Run(businessLogic);  // 逻辑加载
                 parent.Invoke(UILogic);         // UI加载
-                parent.Invoke(HideMask(parent));// UI中隐藏遮罩层
+                parent.Invoke(RemoveMask(parent));// UI中移除遮罩层
             });
         }
         /// <summary>
@@ -54,7 +54,7 @@ namespace DA
         /// 从窗体中移除遮罩层
         /// </summary>
         /// <param name="parent"></param>
-        public static Action HideMask(Form parent)
+        public static Action RemoveMask(Form parent)
         {
             var action = new Action(() =>
             {
