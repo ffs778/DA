@@ -53,6 +53,29 @@ namespace DA
                 sqlCommand.ExecuteNonQuery();//执行数据库的语句
             }
         }
+        public void ImporCSV(string csvFilePath,string tableName)
+        {
+            // 开始一个事务
+            using (var transaction = _sqlConnection.BeginTransaction())
+            {
+                using (var reader = new StreamReader(csvFilePath))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(',');
+
+                        // 执行插入操作
+                        using (var insertCommand = new SQLiteCommand($"INSERT INTO {tableName} (Name) VALUES (@Name)", _sqlConnection, transaction))
+                        {
+                            insertCommand.Parameters.AddWithValue("@Name", values[0]);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+                transaction.Commit();// 提交事务
+            }
+        }
         #endregion
 
         #region 执行有返回值的SQL命令
