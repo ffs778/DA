@@ -228,13 +228,14 @@ namespace DA
             // pager1
             // 
             this.pager1.ConditionQueryText = null;
+            this.pager1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pager1.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.pager1.Location = new System.Drawing.Point(4, 992);
             this.pager1.Margin = new System.Windows.Forms.Padding(4);
             this.pager1.Name = "pager1";
             this.pager1.PagerBackColor = System.Drawing.Color.Empty;
             this.pager1.PageSize = 300;
-            this.pager1.Size = new System.Drawing.Size(1896, 36);
+            this.pager1.Size = new System.Drawing.Size(1896, 45);
             this.pager1.TabIndex = 2;
             // 
             // MainForm

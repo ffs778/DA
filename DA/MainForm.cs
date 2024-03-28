@@ -23,6 +23,7 @@ namespace DA
         public MainForm()
         {
             InitializeComponent();
+            this.SizeChanged += new SizeChange(this).ControlResize;
             collectData_dgv.DoubleBuffer();
             pager1.PagerDgv = collectData_dgv;
             InitailComboBox();
