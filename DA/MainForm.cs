@@ -266,5 +266,14 @@ namespace DA
             plotForm.RefreshDataInPlot(GetChartFormParamModel());
         }
         #endregion
+
+        private void Import_btn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                DAL.ImportCsvFile(openFileDialog.FileName);
+            }
+        }
     }
 }

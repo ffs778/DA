@@ -45,6 +45,7 @@ namespace DA
             this.showDatatType_lab = new System.Windows.Forms.Label();
             this.formData_picb = new System.Windows.Forms.PictureBox();
             this.chart1Data_picb = new System.Windows.Forms.PictureBox();
+            this.import_btn = new System.Windows.Forms.Button();
             this.collectData_dgv = new DA.HACDataGridView(this.components);
             this.pager1 = new DA.Pager();
             this.tableLayoutPanel1.SuspendLayout();
@@ -82,6 +83,7 @@ namespace DA
             this.flowLayoutPanel1.Controls.Add(this.showDatatType_lab);
             this.flowLayoutPanel1.Controls.Add(this.formData_picb);
             this.flowLayoutPanel1.Controls.Add(this.chart1Data_picb);
+            this.flowLayoutPanel1.Controls.Add(this.import_btn);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -186,7 +188,18 @@ namespace DA
             this.chart1Data_picb.TabStop = false;
             this.chart1Data_picb.Click += new System.EventHandler(this.Graph_Switch_Click);
             // 
-            // collectData_dgv
+            // import_btn
+            // 
+            this.import_btn.Font = new System.Drawing.Font("Microsoft YaHei UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.import_btn.Location = new System.Drawing.Point(1754, 3);
+            this.import_btn.Name = "import_btn";
+            this.import_btn.Size = new System.Drawing.Size(135, 33);
+            this.import_btn.TabIndex = 70;
+            this.import_btn.Text = "数据导入";
+            this.import_btn.UseVisualStyleBackColor = true;
+            this.import_btn.Click += new System.EventHandler(this.Import_btn_Click);
+            // 
+            // data_dgv
             // 
             this.collectData_dgv.AllowUserToAddRows = false;
             this.collectData_dgv.AllowUserToDeleteRows = false;
@@ -215,7 +228,7 @@ namespace DA
             this.collectData_dgv.DefaultCellStyle = dataGridViewCellStyle3;
             this.collectData_dgv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.collectData_dgv.Location = new System.Drawing.Point(3, 55);
-            this.collectData_dgv.Name = "collectData_dgv";
+            this.collectData_dgv.Name = "data_dgv";
             this.collectData_dgv.ReadOnly = true;
             this.collectData_dgv.RowHeadersVisible = false;
             this.collectData_dgv.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
@@ -272,6 +285,7 @@ namespace DA
         private System.Windows.Forms.Label showDatatType_lab;
         private System.Windows.Forms.PictureBox formData_picb;
         private System.Windows.Forms.PictureBox chart1Data_picb;
+        private System.Windows.Forms.Button import_btn;
     }
 }
 
