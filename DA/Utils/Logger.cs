@@ -30,6 +30,7 @@ namespace DA
             WriteErrorLog(message);
         }
         #endregion
+
         #region 异常日志
         /// <summary>
         /// 记录到异常日志

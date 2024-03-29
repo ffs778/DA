@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,21 +13,13 @@ namespace DA
 {
     public partial class MainForm : Form
     {
-        /// <summary>
-        ///  初始化读取所有数据表
-        ///  选择第一张表
-        ///  判断当前数据表是否有配方，筛选数据
-        ///  如果配方可用，选择第一个配方
-        ///  将配方进行分组
-        ///  选择全部数据分组
-        /// </summary>
+        SingleRecipeAnalysisForm _singleDAForm;
+        CompareSameTimeForm _multiDAForm;
         public MainForm()
         {
             InitializeComponent();
             this.SizeChanged += new SizeChange(this).ControlResize;
         }
-        SingleRecipeAnalysisForm _singleDAForm;
-        CompareSameTimeForm _multiDAForm;
         private void MainForm_Shown(object sender, EventArgs e)
         {
             OpenSingleDAForm();

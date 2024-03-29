@@ -29,6 +29,7 @@ namespace DA
         //添加窗体事件Resize（调整控件大小时）
         public void ControlResize(object sender, EventArgs e)
         {
+            if (_thisCon == null) return;
             RatioX = _thisCon.Width / X;//获取当前宽度与初始宽度的比例
             RatioY = _thisCon.Height / Y;//获取当前高度与初始高度的比例
             SetControls(RatioX, RatioY, _thisCon);
@@ -59,7 +60,7 @@ namespace DA
             foreach (Control con in cons.Controls)
             {
                 var model = (ControlModel)con.Tag;
-
+                if (model == null) continue;
                 float a = Convert.ToSingle(model.controlWidth) * ratioX;//根据窗体缩放比例确定控件的值，宽度//89*300
                 con.Width = (int)(a);//宽度
 
