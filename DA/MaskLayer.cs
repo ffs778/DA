@@ -41,7 +41,7 @@ namespace DA
                 BackColor = parent.BackColor,
                 Parent = parent
             };
-            PictureBox pictureBox = new PictureBox
+            _ = new PictureBox
             {
                 Image = Properties.Resources.Loading,
                 SizeMode = PictureBoxSizeMode.CenterImage,

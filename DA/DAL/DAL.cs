@@ -81,17 +81,53 @@ namespace DA
             return DBHelper.Instance.CheckSQL(commandText);
         }
         /// <summary>
-        /// 获得数据
+        /// 获得所选配方的全部工艺步
         /// </summary>
         /// <param name="tableName"></param>
-        /// <param name="startTime"></param>
-        /// <param name="endTime"></param>
+        /// <param name="recipeName"></param>
         /// <returns></returns>
-        public static DataTable GetData(string tableName, string startTime, string endTime)
+        public static string[] GetDistinctStep(string tableName,string recipeName)
         {
-            string commandText = $"select * from [{tableName}] where [数据采集时间] > '{startTime}' and [数据采集时间] <= '{endTime}' order by 数据采集时间 Desc";
-            return DBHelper.Instance.CheckSQL(commandText);
+            string commandText = $"select distinct 当前工艺步 from [{tableName}] where [配方名称] = '{recipeName}' order by cast (当前工艺步 AS INTEGER);   ";
+            var data =  DBHelper.Instance.CheckSQL(commandText);
+            List<string> stepList = new List<string>(data.Rows.Count);
+            for (int i = 0; i < data.Rows.Count; i++)
+            {
+                stepList.Add(data.Rows[i][0].ToString());
+            }
+            return stepList.ToArray();
         }
+        /// <summary>
+        /// 获得当前配方，当前步的所有工艺时间
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="recipeName"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
+        public static string[] GetDistinctTime(string tableName, string recipeName,string step)
+        {
+            string commandText = $"select distinct 当前工艺时间 from [{tableName}] where [配方名称] = '{recipeName}' and [当前工艺步] = '{step}' order by cast (当前工艺时间 AS INTEGER);   ";
+            var data = DBHelper.Instance.CheckSQL(commandText);
+            List<string> timeList = new List<string>(data.Rows.Count);
+            for (int i = 0; i < data.Rows.Count; i++)
+            {
+                timeList.Add(data.Rows[i][0].ToString());
+            }
+            return timeList.ToArray();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// 导入csv文件

@@ -17,6 +17,20 @@ namespace DA
             pi.SetValue(dgv, true, null);
         }
         /// <summary>
+        /// 在panel中显示子界面
+        /// </summary>
+        /// <param name="panel"></param>
+        /// <param name="form"></param>
+        public static void ShowInnerForm(this Panel panel, Form form)
+        {
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+            panel.RemoveAllControls();
+            panel.Controls.Add(form);
+            form.Show();
+        }
+        /// <summary>
         /// 移除当前控件中的全部控件，释放控件资源，避免出现用户对象或句柄溢出（10000）错误
         /// 特殊控件不可用：datagirdview等
         /// </summary>

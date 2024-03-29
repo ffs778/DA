@@ -24,250 +24,48 @@ namespace DA
         {
             InitializeComponent();
             this.SizeChanged += new SizeChange(this).ControlResize;
-            collectData_dgv.DoubleBuffer();
-            pager1.PagerDgv = collectData_dgv;
-            InitailComboBox();
-            InitialDataGridViewColumnWidth();
+        }
+        SingleRecipeAnalysisForm _singleDAForm;
+        CompareSameTimeForm _multiDAForm;
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            OpenSingleDAForm();
+            ChangeBackColorStateForm(singleDA_tsmi);
         }
         /// <summary>
-        /// 初始化筛选框
+        /// 单开单工艺分析窗口
         /// </summary>
-        private void InitailComboBox()
+        private void OpenSingleDAForm()
         {
-            func_cmb.Items.AddRange(DAL.GetTableName());
-            func_cmb.SelectedIndex = 0;
-            JudgeRecipe();
-        }
-        private void InitialDataGridViewColumnWidth()
-        {
-            for (int i = 0; i < collectData_dgv.Columns.Count; i++)
+            if (_singleDAForm != null && !_singleDAForm.IsDisposed)
             {
-                collectData_dgv.Columns[i].Width = 200;
+                if (showForm_panel.Controls[0].Name != _singleDAForm.Name) showForm_panel.ShowInnerForm(_singleDAForm);
+                return;
             }
-        }
-        /// <summary>
-        /// 查找数据
-        /// </summary>
-        private void GetData()
-        {
-            pager1.ConditionQueryText = recipe_cmb.Enabled ? $"select * from [{func_cmb.SelectedItem}] where [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc" : $"select * from [{func_cmb.SelectedItem}] order by 数据采集时间 Desc";
-            pager1.RefreshData();
-            // 刷新图表
-            RefreshPlot(chartform);
-        }
-        /// <summary>
-        /// 配方筛选
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Recipe_cmb_SelectedValueChanged(object sender, EventArgs e)
-        {
-            GetData();
-            InitialGroup();
-        }
-        /// <summary>
-        /// 切换数据表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Func_cmb_SelectedValueChanged(object sender, EventArgs e)
-        {
-            JudgeRecipe();
-            GetData();
-            InitialDataGridViewColumnWidth();
-        }
-        /// <summary>
-        /// 判断是否存在配方字段
-        /// </summary>
-        private void JudgeRecipe()
-        {
-            recipe_cmb.Items.Clear();
-            // 如果存在配方字段
-            if (DAL.ExistRecipe(func_cmb.SelectedItem.ToString()))
-            {
-                recipe_cmb.Enabled = true;
-                recipe_cmb.Items.AddRange(DAL.GetRecipes(func_cmb.SelectedItem.ToString()));
-                recipe_cmb.SelectedIndex = 0;
-            }
-            else
-            {
-                recipe_cmb.Enabled = false;
-            }
-        }
-        List<string> _timeFlagList;
-        /// <summary>
-        /// 获得单次分组信息
-        /// </summary>
-        private void InitialGroup()
-        {
-            _timeFlagList = GetTimeFlag();
-            // 1. 根据时间节点得到分组信息： 组数=  节点 -1 ；
-            int groupCount = _timeFlagList.ToArray().Length - 1;
-            group_cmb.Items.Clear();
-            group_cmb.Items.Add("全部");
-            group_cmb.Items.AddRange(GetRange(groupCount));
-            group_cmb.SelectedIndex = 0;
-        }
-        /// <summary>
-        /// 获得分组范围
-        /// </summary>
-        /// <param name="num"></param>
-        /// <returns></returns>
-        private string[] GetRange(int num)
-        {
-            List<string> list = new List<string>(num);
-            for (int i = 1; i <= num; i++)
-            {
-                list.Add(i.ToString());
-            }
-            return list.ToArray();
-        }
-        /// <summary>
-        /// 获得时间节点信息
-        /// </summary>
-        /// <returns></returns>
-        private List<string> GetTimeFlag()
-        {
-            // 1. 得到时间、工艺步
-            var data = DAL.GetTimeAndCraftStep(func_cmb.SelectedItem.ToString(), recipe_cmb.SelectedItem.ToString());
-            int flagStep = Convert.ToInt32(data.Rows[0][1]);
-            string endTime = data.Rows[0][0].ToString();   // 第一个时间
-            string startTime = data.Rows[data.Rows.Count - 1][0].ToString();  // 最后一个时间
-            List<string> timeFlagList = new List<string>();
-            timeFlagList.Add(endTime);
-            // 2. 得到时间节点信息。
-            for (int i = 0; i < data.Rows.Count; i++)
-            {
-                if (flagStep == Convert.ToInt32(data.Rows[i][1])) { }
-                else if (flagStep == Convert.ToInt32(data.Rows[i][1]) + 1)
-                {
-                    flagStep = Convert.ToInt32(data.Rows[i][1]);    // 替换新值
-                }
-                else
-                {
-                    flagStep = Convert.ToInt32(data.Rows[i][1]);    // 替换新值
-                    timeFlagList.Add(data.Rows[i][0].ToString());   // 记录时间标记
-                }
-            }
-            timeFlagList.Add(startTime);
-            return timeFlagList;
-        }
-        /// <summary>
-        /// 切换分组
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Group_cmb_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (group_cmb.SelectedItem.ToString() == "全部") return;
-            var timeFlags = _timeFlagList.ToArray();
-            string endTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem) - 1];
-            string startTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem)];
-
-            pager1.ConditionQueryText = $"select * from [{func_cmb.SelectedItem}] where [数据采集时间] > '{startTime}' and [数据采集时间] <= '{endTime}' and [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc";
-            pager1.RefreshData();
-            // 刷新图表
-            RefreshPlot(chartform);
-        }
-        #region 图表切换
-
-        #region 历史数据图表
-        HistoryChartForm chartform;
-        private void Graph_Switch_Click(object sender, EventArgs e)
-        {
-            if (chartform != null && !chartform.IsDisposed) return;
-            // 生成历史数据图表
-            formData_picb.Image = Properties.Resources.form;
-            chart1Data_picb.Image = Properties.Resources.chart2Selected;
-            pager1.Visible = false;
-            collectData_dgv.Visible = false;
-            MaskLayer.CreateMask(this, new Point(0, flowLayoutPanel1.Height), this.Size);   // 添加遮罩层
+            MaskLayer.CreateMask(this, new Point(0, menuStrip1.Height), this.Size);   // 添加遮罩层
             MaskLayer.LoadingFunction(this,
-                new Action(() => { chartform = new HistoryChartForm(GetChartFormParamModel()); }),
-                new Action(() => ShowChartForm(chartform)));
+                new Action(() => { _singleDAForm = new SingleRecipeAnalysisForm(); }),
+                new Action(() => { showForm_panel.ShowInnerForm(_singleDAForm); }));
         }
-        #endregion
-
-        #region 数据表
-        private void FormData_picb_Click(object sender, EventArgs e)
-        {
-            if (collectData_dgv.Visible) return;
-            formData_picb.Image = Properties.Resources.formSelected;
-            chart1Data_picb.Image = Properties.Resources.chart2;
-            collectData_dgv.Visible = true;
-            pager1.Visible = true;
-
-            RemovePlot(chartform);
-        }
-        #endregion
         /// <summary>
-        /// 获得图表对象实参
+        /// 打开多步骤分析窗口
         /// </summary>
-        /// <returns></returns>
-        private ChartFormParamModel GetChartFormParamModel()
+        private void OpenMultiDAForm()
         {
-            DataTable pagedData = collectData_dgv.DataSource as DataTable;
-            // X轴标签
-            var chartLabels = pagedData.AsEnumerable().Select(x => x.Field<string>("数据采集时间")).Select(x => x.ToString()).Reverse().ToArray();
-            var pagedDataNew = pagedData.Copy();
-            List<ChartDataModel> chartDataModels = new List<ChartDataModel>();
-            //列名切换为中文
-            for (int i = 0; i < pagedData.Columns.Count; i++)
+            if (_multiDAForm != null && !_multiDAForm.IsDisposed)
             {
-                if (collectData_dgv.Columns[i].HeaderText.Contains("工艺步") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("时间") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("倒计时")) continue;
-                double[] data;
-                try
-                {
-                    data = pagedDataNew.AsEnumerable().Select(x => x.Field<string>(collectData_dgv.Columns[i].HeaderText)).Select(y => double.Parse(y)).Reverse().ToArray();
-                }
-                catch
-                {
-                    continue;
-                }
-                ChartDataModel dataModel = new ChartDataModel();
-                dataModel.Description = collectData_dgv.Columns[i].HeaderText;
-                dataModel.Data = data;
-                chartDataModels.Add(dataModel);
+                if (showForm_panel.Controls[0].Name != _multiDAForm.Name) showForm_panel.ShowInnerForm(_multiDAForm);
+                return;
             }
-
-            ChartFormParamModel model = new()
-            {
-                ChartDataModels = chartDataModels,
-                Labels = chartLabels,
-                Tag = func_cmb.SelectedItem.ToString()
-            };
-            return model;
+            MaskLayer.CreateMask(this, new Point(0, menuStrip1.Height), this.Size);   // 添加遮罩层
+            MaskLayer.LoadingFunction(this,
+                new Action(() => { _multiDAForm = new CompareSameTimeForm(); }),
+                new Action(() => { showForm_panel.ShowInnerForm(_multiDAForm); }));
         }
         /// <summary>
-        /// 添加图表
+        /// 数据导入
         /// </summary>
-        private void ShowChartForm(HistoryChartForm plotForm)
-        {
-            plotForm.TopLevel = false;
-            plotForm.FormBorderStyle = FormBorderStyle.None;
-            plotForm.Dock = DockStyle.Fill;
-            this.tableLayoutPanel1.Controls.Add(plotForm);
-            plotForm.Show();
-        }
-        /// <summary>
-        /// 移除图表
-        /// </summary>
-        private void RemovePlot(HistoryChartForm plotForm)
-        {
-            if (plotForm == null || plotForm.IsDisposed) return;
-            this.tableLayoutPanel1.Controls.Remove(plotForm);
-            plotForm.Dispose();
-        }
-        private void RefreshPlot(HistoryChartForm plotForm)
-        {
-            if (plotForm == null || plotForm.IsDisposed) return;
-            plotForm.RefreshDataInPlot(GetChartFormParamModel());
-        }
-        #endregion
-
-        private void Import_btn_Click(object sender, EventArgs e)
+        private void Import()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -275,5 +73,46 @@ namespace DA
                 DAL.ImportCsvFile(openFileDialog.FileName);
             }
         }
+        /// <summary>
+        /// 切换颜色
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="form"></param>
+        private void ChangeBackColorStateForm(object sender)
+        {
+            var contorl = sender as ToolStripMenuItem;
+            for (int i = 0; i < menuStrip1.Items.Count; i++)
+            {
+                menuStrip1.Items[i].BackColor =
+                    menuStrip1.Items[i].Text == contorl.Text ?
+                    Color.FromKnownColor(KnownColor.HotTrack) :     // 选中
+                    Color.FromKnownColor(KnownColor.MenuHighlight); // 未选中
+            }
+        }
+        private void SingleDA_tsmi_Click(object sender, EventArgs e)
+        {
+            OpenSingleDAForm();
+            ChangeBackColorStateForm(sender);
+        }
+        private void MultiDA_tsmi_Click(object sender, EventArgs e)
+        {
+            OpenMultiDAForm();
+            ChangeBackColorStateForm(sender);
+        }
+        private void Import_tsmi_Click(object sender, EventArgs e) => Import();
+        #region 减少闪烁
+        /// <summary>
+        /// 减少界面闪烁
+        /// </summary>
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+                return cp;
+            }
+        }
+        #endregion
     }
 }
