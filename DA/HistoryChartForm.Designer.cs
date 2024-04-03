@@ -56,11 +56,10 @@ namespace DA
             // 
             // timeTips_lab
             // 
-            this.timeTips_lab.AutoSize = true;
             this.timeTips_lab.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.timeTips_lab.Location = new System.Drawing.Point(184, 172);
             this.timeTips_lab.Name = "timeTips_lab";
-            this.timeTips_lab.Size = new System.Drawing.Size(40, 21);
+            this.timeTips_lab.Size = new System.Drawing.Size(1696, 21);
             this.timeTips_lab.TabIndex = 13;
             this.timeTips_lab.Text = "      ";
             this.timeTips_lab.Visible = false;

@@ -241,7 +241,7 @@ namespace DA
                     $"数据：{pointY}{ Environment.NewLine}" +
                     $"时间：{_timerLabelArray[pointIndex]}";
                 _tipsList.Add(_plot.AddTooltip(msg, x: pointIndex, y: pointY));
-                timeTips_lab.Text = $"时间：{_timerLabelArray[pointIndex]}";
+                timeTips_lab.Text = $"(已自动切换显示模式)   类型：{paramList_flPanel.Controls[i].Text}     数据：{pointY}      时间：{_timerLabelArray[pointIndex]}";
             }
             formsPlot1.Refresh();
         }
