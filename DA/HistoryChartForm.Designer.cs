@@ -29,7 +29,6 @@ namespace DA
         /// </summary>
         private void InitializeComponent()
         {
-            timeTips_lab = new System.Windows.Forms.Label();
             toolTipsShow_cbx = new System.Windows.Forms.CheckBox();
             allSelect_cbx = new System.Windows.Forms.CheckBox();
             paramList_flPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -37,20 +36,11 @@ namespace DA
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            timeTips_rtbx = new System.Windows.Forms.RichTextBox();
             tableLayoutPanel1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
-            // 
-            // timeTips_lab
-            // 
-            timeTips_lab.Dock = System.Windows.Forms.DockStyle.Fill;
-            timeTips_lab.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            timeTips_lab.Location = new System.Drawing.Point(214, 120);
-            timeTips_lab.Name = "timeTips_lab";
-            timeTips_lab.Size = new System.Drawing.Size(2327, 120);
-            timeTips_lab.TabIndex = 15;
-            timeTips_lab.Text = "      ";
             // 
             // toolTipsShow_cbx
             // 
@@ -62,7 +52,7 @@ namespace DA
             toolTipsShow_cbx.Name = "toolTipsShow_cbx";
             toolTipsShow_cbx.Size = new System.Drawing.Size(125, 25);
             toolTipsShow_cbx.TabIndex = 14;
-            toolTipsShow_cbx.Text = "显示数据提示";
+            toolTipsShow_cbx.Text = "显示数据气泡";
             toolTipsShow_cbx.UseVisualStyleBackColor = true;
             toolTipsShow_cbx.CheckedChanged += TooltipsShow_cbx_CheckedChanged;
             // 
@@ -101,10 +91,10 @@ namespace DA
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.324145F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 91.67586F));
-            tableLayoutPanel1.Controls.Add(timeTips_lab, 1, 1);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 0);
             tableLayoutPanel1.Controls.Add(paramList_flPanel, 1, 0);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Controls.Add(timeTips_rtbx, 1, 1);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -135,6 +125,17 @@ namespace DA
             flowLayoutPanel2.Size = new System.Drawing.Size(205, 114);
             flowLayoutPanel2.TabIndex = 16;
             // 
+            // timeTips_rtbx
+            // 
+            timeTips_rtbx.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            timeTips_rtbx.Dock = System.Windows.Forms.DockStyle.Fill;
+            timeTips_rtbx.Location = new System.Drawing.Point(214, 123);
+            timeTips_rtbx.Name = "timeTips_rtbx";
+            timeTips_rtbx.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            timeTips_rtbx.Size = new System.Drawing.Size(2327, 114);
+            timeTips_rtbx.TabIndex = 17;
+            timeTips_rtbx.Text = "";
+            // 
             // HistoryChartForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -155,11 +156,11 @@ namespace DA
         protected System.Windows.Forms.FlowLayoutPanel paramList_flPanel;
         private System.Windows.Forms.CheckBox allSelect_cbx;
         protected ScottPlot.FormsPlot formsPlot1;
-        protected System.Windows.Forms.Label timeTips_lab;
         private System.Windows.Forms.CheckBox toolTipsShow_cbx;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.RichTextBox timeTips_rtbx;
     }
 }
 

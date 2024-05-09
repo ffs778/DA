@@ -247,7 +247,7 @@ namespace DA
                 timeIndex = pointIndex;
             }
             string recipeMsg = haveRecipe ? $"【配方：{_recipes[timeIndex]}】" : "";
-            timeTips_lab.Text = $"-->【时间：{_timeLabelArray[timeIndex]}】{recipeMsg}{sb}";
+            timeTips_rtbx.Text = $"-->【时间：{_timeLabelArray[timeIndex]}】{recipeMsg}{sb}";
             formsPlot1.Refresh();
         }
         /// <summary>
