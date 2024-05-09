@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DA.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,8 +19,9 @@ namespace DA
         public MainForm()
         {
             InitializeComponent();
-            this.SizeChanged += new SizeChange(this).ControlResize;
+           // this.SizeChanged += new SizeChange(this).ControlResize;
         }
+        [LoadingMask]
         private void MainForm_Shown(object sender, EventArgs e)
         {
             OpenSingleDAForm();
@@ -35,10 +37,8 @@ namespace DA
                 if (showForm_panel.Controls[0].Name != _singleDAForm.Name) showForm_panel.ShowInnerForm(_singleDAForm);
                 return;
             }
-            MaskLayer.CreateMask(this, new Point(0, menuStrip1.Height), this.Size);   // 添加遮罩层
-            MaskLayer.LoadingFunction(this,
-                new Action(() => { _singleDAForm = new SingleRecipeAnalysisForm(); }),
-                new Action(() => { showForm_panel.ShowInnerForm(_singleDAForm); }));
+            _singleDAForm = new SingleRecipeAnalysisForm();
+            showForm_panel.ShowInnerForm(_singleDAForm);
         }
         /// <summary>
         /// 打开多步骤分析窗口
@@ -50,20 +50,22 @@ namespace DA
                 if (showForm_panel.Controls[0].Name != _multiDAForm.Name) showForm_panel.ShowInnerForm(_multiDAForm);
                 return;
             }
-            MaskLayer.CreateMask(this, new Point(0, menuStrip1.Height), this.Size);   // 添加遮罩层
-            MaskLayer.LoadingFunction(this,
-                new Action(() => { _multiDAForm = new CompareSameTimeForm(); }),
-                new Action(() => { showForm_panel.ShowInnerForm(_multiDAForm); }));
+            _multiDAForm = new CompareSameTimeForm();
+            showForm_panel.ShowInnerForm(_multiDAForm);
         }
         /// <summary>
         /// 数据导入
         /// </summary>
         private void Import()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            EncodingSelectWindow encodingSelect = new EncodingSelectWindow();
+            if (DialogResult.OK == encodingSelect.ShowDialog())
             {
-                DAL.ImportCsvFile(openFileDialog.FileName);
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    DAL.ImportCsvFile(openFileDialog.FileName,encodingSelect.EncodingType);
+                }
             }
         }
         /// <summary>
