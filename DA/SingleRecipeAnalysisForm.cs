@@ -25,7 +25,7 @@ namespace DA
             InitializeComponent();
             collectData_dgv.DoubleBuffer();
             pager1.PagerDgv = collectData_dgv;
-           
+
         }
         private void SingleRecipeAnalysisForm_Shown(object sender, EventArgs e)
         {
@@ -37,8 +37,8 @@ namespace DA
         /// </summary>
         private void InitailComboBox()
         {
-            func_cmb.Items.AddRange(DAL.GetTableName());
-            func_cmb.SelectedIndex = 0;
+            dataTable_cmb.Items.AddRange(DAL.GetTableName());
+            dataTable_cmb.SelectedIndex = 0;
             JudgeRecipe();
         }
         private void InitialDataGridViewColumnWidth()
@@ -53,7 +53,7 @@ namespace DA
         /// </summary>
         private void GetData()
         {
-            pager1.ConditionQueryText = recipe_cmb.Enabled ? $"select * from [{func_cmb.SelectedItem}] where [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc" : $"select * from [{func_cmb.SelectedItem}] order by 数据采集时间 Desc";
+            pager1.ConditionQueryText = recipe_cmb.Enabled ? $"select * from [{dataTable_cmb.SelectedItem}] where [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc" : $"select * from [{dataTable_cmb.SelectedItem}] order by 数据采集时间 Desc";
             pager1.RefreshData();
             // 刷新图表
             RefreshPlot(chartform);
@@ -86,10 +86,10 @@ namespace DA
         {
             recipe_cmb.Items.Clear();
             // 如果存在配方字段
-            if (DAL.ExistRecipe(func_cmb.SelectedItem.ToString()))
+            if (DAL.ExistRecipe(dataTable_cmb.SelectedItem.ToString()))
             {
                 recipe_cmb.Enabled = true;
-                recipe_cmb.Items.AddRange(DAL.GetRecipes(func_cmb.SelectedItem.ToString()));
+                recipe_cmb.Items.AddRange(DAL.GetRecipes(dataTable_cmb.SelectedItem.ToString()));
                 recipe_cmb.SelectedIndex = 0;
             }
             else
@@ -132,7 +132,7 @@ namespace DA
         private List<string> GetTimeFlag()
         {
             // 1. 得到时间、工艺步
-            var data = DAL.GetTimeAndCraftStep(func_cmb.SelectedItem.ToString(), recipe_cmb.SelectedItem.ToString());
+            var data = DAL.GetTimeAndCraftStep(dataTable_cmb.SelectedItem.ToString(), recipe_cmb.SelectedItem.ToString());
             int flagStep = Convert.ToInt32(data.Rows[0][1]);
             string endTime = data.Rows[0][0].ToString();   // 第一个时间
             string startTime = data.Rows[data.Rows.Count - 1][0].ToString();  // 最后一个时间
@@ -162,12 +162,17 @@ namespace DA
         /// <param name="e"></param>
         private void Group_cmb_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (group_cmb.SelectedItem.ToString() == "全部") return;
-            var timeFlags = _timeFlagList.ToArray();
-            string endTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem) - 1];
-            string startTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem)];
-
-            pager1.ConditionQueryText = $"select * from [{func_cmb.SelectedItem}] where [数据采集时间] > '{startTime}' and [数据采集时间] <= '{endTime}' and [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc";
+            if (group_cmb.SelectedItem.ToString() == "全部")
+            {
+                pager1.ConditionQueryText = $"select * from [{dataTable_cmb.SelectedItem}] where [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc";
+            }
+            else
+            {
+                var timeFlags = _timeFlagList.ToArray();
+                string endTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem) - 1];
+                string startTime = timeFlags[Convert.ToInt32(group_cmb.SelectedItem)];
+                pager1.ConditionQueryText = $"select * from [{dataTable_cmb.SelectedItem}] where [数据采集时间] > '{startTime}' and [数据采集时间] <= '{endTime}' and [配方名称] = '{recipe_cmb.SelectedItem}' order by 数据采集时间 Desc";
+            }
             pager1.RefreshData();
             // 刷新图表
             RefreshPlot(chartform);
@@ -209,29 +214,37 @@ namespace DA
         /// <returns></returns>
         private ChartFormParamModel GetChartFormParamModel()
         {
-            DataTable pagedData = collectData_dgv.DataSource as DataTable;
+            DataTable pagedData = null;
+            DataTable pagedDataNew = null;
+            string cavityName = string.Empty;
+            this.Invoke(new Action(() =>
+            {
+                pagedData = collectData_dgv.DataSource as DataTable;
+                cavityName = dataTable_cmb.SelectedItem.ToString();
+                pagedDataNew = pagedData.Copy();
+                //列名切换为中文
+                for (int i = 0; i < pagedDataNew.Columns.Count; i++)
+                {
+                    pagedDataNew.Columns[i].ColumnName = collectData_dgv.Columns[i].HeaderText;
+                }
+            }));
+
             // X轴标签
             var chartLabels = pagedData.AsEnumerable().Select(x => x.Field<string>("数据采集时间")).Select(x => x.ToString()).Reverse().ToArray();
-            var pagedDataNew = pagedData.Copy();
+            var recipes = pagedData.AsEnumerable().Select(x => x.Field<string>("配方名称")).Select(x => x.ToString()).Reverse().ToArray();
             List<ChartDataModel> chartDataModels = new List<ChartDataModel>();
-            //列名切换为中文
-            for (int i = 0; i < pagedData.Columns.Count; i++)
+
+            for (int i = 0; i < pagedDataNew.Columns.Count; i++)
             {
-                if (collectData_dgv.Columns[i].HeaderText.Contains("工艺步") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("时间") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("倒计时")) continue;
-                double[] data;
-                try
-                {
-                    data = pagedDataNew.AsEnumerable().Select(x => x.Field<string>(collectData_dgv.Columns[i].HeaderText)).Select(y => double.Parse(y)).Reverse().ToArray();
-                }
-                catch
-                {
-                    continue;
-                }
+                if (pagedDataNew.Columns[i].ColumnName.Contains("工艺步") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("时间") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("倒计时") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("载板编号")||
+                    pagedDataNew.Columns[i].ColumnName.Contains("配方名称")
+                    ) continue;
                 ChartDataModel dataModel = new ChartDataModel();
-                dataModel.Description = collectData_dgv.Columns[i].HeaderText;
-                dataModel.Data = data;
+                dataModel.Description = pagedDataNew.Columns[i].ColumnName;
+                dataModel.Data = pagedDataNew.AsEnumerable().Select(x => x.Field<string>(pagedDataNew.Columns[i].ColumnName)).Select(y => double.Parse(y)).Reverse().ToArray(); ;
                 chartDataModels.Add(dataModel);
             }
 
@@ -239,7 +252,8 @@ namespace DA
             {
                 ChartDataModels = chartDataModels,
                 Labels = chartLabels,
-                Tag = func_cmb.SelectedItem.ToString()
+                CavityName = cavityName,
+                Recipe = recipes
             };
             return model;
         }

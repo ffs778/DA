@@ -17,7 +17,11 @@ namespace DA
         /// <summary>
         /// 标记
         /// </summary>
-        public string Tag { get; set; }
+        public string CavityName { get; set; }
+        /// <summary>
+        /// 数据对应的配方名称
+        /// </summary>
+        public string[] Recipe { get; set; }
 
     }
     public class ChartDataModel

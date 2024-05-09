@@ -163,29 +163,37 @@ namespace DA
         /// <returns></returns>
         private ChartFormParamModel GetChartFormParamModel()
         {
-            DataTable pagedData = collectData_dgv.DataSource as DataTable;
+            DataTable pagedData = null;
+            DataTable pagedDataNew = null;
+            string cavityName = string.Empty;
+            this.Invoke(new Action(() =>
+            {
+                pagedData = collectData_dgv.DataSource as DataTable;
+                cavityName = func_cmb.SelectedItem.ToString();
+                pagedDataNew = pagedData.Copy();
+                //列名切换为中文
+                for (int i = 0; i < pagedDataNew.Columns.Count; i++)
+                {
+                    pagedDataNew.Columns[i].ColumnName = collectData_dgv.Columns[i].HeaderText;
+                }
+            }));
+
             // X轴标签
             var chartLabels = pagedData.AsEnumerable().Select(x => x.Field<string>("数据采集时间")).Select(x => x.ToString()).Reverse().ToArray();
-            var pagedDataNew = pagedData.Copy();
+            var recipes = pagedData.AsEnumerable().Select(x => x.Field<string>("配方名称")).Select(x => x.ToString()).Reverse().ToArray();
             List<ChartDataModel> chartDataModels = new List<ChartDataModel>();
-            //列名切换为中文
-            for (int i = 0; i < pagedData.Columns.Count; i++)
+
+            for (int i = 0; i < pagedDataNew.Columns.Count; i++)
             {
-                if (collectData_dgv.Columns[i].HeaderText.Contains("工艺步") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("时间") ||
-                    collectData_dgv.Columns[i].HeaderText.Contains("倒计时")) continue;
-                double[] data;
-                try
-                {
-                    data = pagedDataNew.AsEnumerable().Select(x => x.Field<string>(collectData_dgv.Columns[i].HeaderText)).Select(y => double.Parse(y)).Reverse().ToArray();
-                }
-                catch
-                {
-                    continue;
-                }
+                if (pagedDataNew.Columns[i].ColumnName.Contains("工艺步") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("时间") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("倒计时") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("载板编号") ||
+                    pagedDataNew.Columns[i].ColumnName.Contains("配方名称")
+                    ) continue;
                 ChartDataModel dataModel = new ChartDataModel();
-                dataModel.Description = collectData_dgv.Columns[i].HeaderText;
-                dataModel.Data = data;
+                dataModel.Description = pagedDataNew.Columns[i].ColumnName;
+                dataModel.Data = pagedDataNew.AsEnumerable().Select(x => x.Field<string>(pagedDataNew.Columns[i].ColumnName)).Select(y => double.Parse(y)).Reverse().ToArray(); ;
                 chartDataModels.Add(dataModel);
             }
 
@@ -193,7 +201,8 @@ namespace DA
             {
                 ChartDataModels = chartDataModels,
                 Labels = chartLabels,
-                Tag = func_cmb.SelectedItem.ToString()
+                CavityName = cavityName,
+                Recipe = recipes
             };
             return model;
         }
