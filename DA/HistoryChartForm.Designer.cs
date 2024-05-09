@@ -73,16 +73,16 @@ namespace DA
             paramList_flPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             paramList_flPanel.Location = new System.Drawing.Point(214, 3);
             paramList_flPanel.Name = "paramList_flPanel";
-            paramList_flPanel.Size = new System.Drawing.Size(2327, 114);
+            paramList_flPanel.Size = new System.Drawing.Size(2327, 117);
             paramList_flPanel.TabIndex = 7;
             // 
             // formsPlot1
             // 
             formsPlot1.Dock = System.Windows.Forms.DockStyle.Fill;
-            formsPlot1.Location = new System.Drawing.Point(0, 240);
+            formsPlot1.Location = new System.Drawing.Point(0, 200);
             formsPlot1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             formsPlot1.Name = "formsPlot1";
-            formsPlot1.Size = new System.Drawing.Size(2544, 976);
+            formsPlot1.Size = new System.Drawing.Size(2544, 1016);
             formsPlot1.TabIndex = 0;
             formsPlot1.MouseMove += FormsPlot1_MouseMove;
             // 
@@ -99,9 +99,9 @@ namespace DA
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(2544, 240);
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.643837F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.356163F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(2544, 200);
             tableLayoutPanel1.TabIndex = 6;
             // 
             // flowLayoutPanel1
@@ -112,7 +112,7 @@ namespace DA
             flowLayoutPanel1.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new System.Drawing.Size(205, 114);
+            flowLayoutPanel1.Size = new System.Drawing.Size(205, 117);
             flowLayoutPanel1.TabIndex = 12;
             // 
             // flowLayoutPanel2
@@ -120,19 +120,19 @@ namespace DA
             flowLayoutPanel2.Controls.Add(toolTipsShow_cbx);
             flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            flowLayoutPanel2.Location = new System.Drawing.Point(3, 123);
+            flowLayoutPanel2.Location = new System.Drawing.Point(3, 126);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new System.Drawing.Size(205, 114);
+            flowLayoutPanel2.Size = new System.Drawing.Size(205, 71);
             flowLayoutPanel2.TabIndex = 16;
             // 
             // timeTips_rtbx
             // 
             timeTips_rtbx.BorderStyle = System.Windows.Forms.BorderStyle.None;
             timeTips_rtbx.Dock = System.Windows.Forms.DockStyle.Fill;
-            timeTips_rtbx.Location = new System.Drawing.Point(214, 123);
+            timeTips_rtbx.Location = new System.Drawing.Point(214, 126);
             timeTips_rtbx.Name = "timeTips_rtbx";
             timeTips_rtbx.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            timeTips_rtbx.Size = new System.Drawing.Size(2327, 114);
+            timeTips_rtbx.Size = new System.Drawing.Size(2327, 71);
             timeTips_rtbx.TabIndex = 17;
             timeTips_rtbx.Text = "";
             // 
