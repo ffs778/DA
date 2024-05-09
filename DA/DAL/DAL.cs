@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DA.Utils;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -86,10 +87,10 @@ namespace DA
         /// <param name="tableName"></param>
         /// <param name="recipeName"></param>
         /// <returns></returns>
-        public static string[] GetDistinctStep(string tableName,string recipeName)
+        public static string[] GetDistinctStep(string tableName, string recipeName)
         {
             string commandText = $"select distinct 当前工艺步 from [{tableName}] where [配方名称] = '{recipeName}' order by cast (当前工艺步 AS INTEGER);   ";
-            var data =  DBHelper.Instance.CheckSQL(commandText);
+            var data = DBHelper.Instance.CheckSQL(commandText);
             List<string> stepList = new List<string>(data.Rows.Count);
             for (int i = 0; i < data.Rows.Count; i++)
             {
@@ -104,7 +105,7 @@ namespace DA
         /// <param name="recipeName"></param>
         /// <param name="step"></param>
         /// <returns></returns>
-        public static string[] GetDistinctTime(string tableName, string recipeName,string step)
+        public static string[] GetDistinctTime(string tableName, string recipeName, string step)
         {
             string commandText = $"select distinct 当前工艺时间 from [{tableName}] where [配方名称] = '{recipeName}' and [当前工艺步] = '{step}' order by cast (当前工艺时间 AS INTEGER);   ";
             var data = DBHelper.Instance.CheckSQL(commandText);
@@ -131,22 +132,39 @@ namespace DA
 
         /// <summary>
         /// 导入csv文件
+        /// 列名作为数据库字段，文件名作为表名
         /// </summary>
         /// <param name="path">文件路径</param>
-        public static void ImportCsvFile(string path)
+        public static async void ImportCsvFile(string path, EncodingType encodingType)
         {
-            var tableName = CreateTable(path);
-            // 3.读取CSV文件内容，插入数据库表中
-            var lines = File.ReadAllLines(path);
-            StringBuilder valuesSb = new StringBuilder();
-            var valuesLines = lines.Skip(1).ToArray();// 跳过标题行
-            for (int i = 0; i < valuesLines.Length; i++)
+            await Task.Run(() =>
             {
-                valuesSb.Append($"('{valuesLines[i].Replace(",", "','")}')");
-                if (i < valuesLines.Length - 1) valuesSb.Append(',');
-            }
-            string commandText = $"insert into [{tableName}] values{valuesSb}";
-            DBHelper.Instance.ExecuteSQL(commandText);
+                Encoding encoding = default;
+                switch (encodingType)
+                {
+                    case EncodingType.GB2312:encoding = EncodingEx.GB2312;
+                        break;
+                    case EncodingType.UTF8:encoding = Encoding.UTF8;
+                        break;
+                }
+                var lines = File.ReadAllLines(path, encoding);
+                // 1. 文件内容未知，因此先读取第一行csv内容。获取字段数量、列名
+                var fields = lines[0].Split(',');
+                var tableName = Path.GetFileNameWithoutExtension(path); ; // 文件名
+                CreateTable(tableName, fields);
+                // 3.读取CSV文件内容，插入数据库表中
+                
+                StringBuilder valuesSb = new StringBuilder();
+                var valuesLines = lines.Skip(1).ToArray();// 跳过标题行
+                for (int i = 0; i < valuesLines.Length; i++)
+                {
+                    valuesSb.Append($"('{valuesLines[i].Replace(",", "','")}')");
+                    if (i < valuesLines.Length - 1) valuesSb.Append(',');
+                }
+                string commandText = $"insert into [{tableName}] values{valuesSb}";
+                DBHelper.Instance.ExecuteSQL(commandText);
+
+            });
             NotifyMessage.ShowSuccess("数据导入成功!");
         }
         /// <summary>
@@ -155,23 +173,18 @@ namespace DA
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
         /// <returns></returns>
-        private static string CreateTable(string path)
+        private static void CreateTable(string tableName, string[] fields)
         {
-            // 1. 文件内容未知，因此先读取第一行csv内容。获取字段数量、列名
-            var headLine = File.ReadAllLines(path)[0]; // 第一行内容
-            var fileName = Path.GetFileNameWithoutExtension(path); ; // 文件名
-            var header = headLine.Split(',');
-            var fieldCount = header.Length;
+            var fieldCount = fields.Length;
             // 2. 根据列名和数量生成数据表
             StringBuilder fieldsSb = new StringBuilder();
-            for (int i = 0; i < header.Length; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
-                fieldsSb.Append($"[{header[i]}] TEXT");
-                if (i < header.Length - 1) fieldsSb.Append(", ");
+                fieldsSb.Append($"[{fields[i]}] TEXT");
+                if (i < fields.Length - 1) fieldsSb.Append(", ");
             }
-            string commandText = $"CREATE TABLE [{fileName}] ({fieldsSb});";
+            string commandText = $"CREATE TABLE [{tableName}] ({fieldsSb});";
             DBHelper.Instance.ExecuteSQL(commandText);
-            return fileName;
         }
     }
 }

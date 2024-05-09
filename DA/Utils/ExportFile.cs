@@ -81,7 +81,7 @@ namespace DA
                 {
                     Stream myStream;
                     myStream = saveFileDialog.OpenFile();
-                    StreamWriter sw = new StreamWriter(myStream, System.Text.Encoding.Default);
+                    StreamWriter sw = new StreamWriter(myStream, System.Text.Encoding.GetEncoding(-0));// WPS EXCEL 编码格式不一样
                     try
                     {
                         sw.WriteLine(string.Join(separator, columnHeaders));                 // 列标题行
@@ -126,7 +126,7 @@ namespace DA
                 {
                     Stream myStream;
                     myStream = saveFileDialog.OpenFile();
-                    StreamWriter sw = new StreamWriter(myStream, System.Text.Encoding.Default);
+                    StreamWriter sw = new StreamWriter(myStream, System.Text.Encoding.GetEncoding(-0));// WPS EXCEL 编码格式不一样
                     try
                     {
                         sw.WriteLine($"{separator}{string.Join(separator, columnHeaders)}");  // 列标题行,第一列为空

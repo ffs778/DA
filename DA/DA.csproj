@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Rougamo.Fody" Version="2.3.0" />
     <PackageReference Include="ScottPlot" Version="4.1.63" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
