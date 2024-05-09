@@ -29,123 +29,137 @@ namespace DA
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.timeTips_lab = new System.Windows.Forms.Label();
-            this.toolTipsShow_cbx = new System.Windows.Forms.CheckBox();
-            this.allSelect_cbx = new System.Windows.Forms.CheckBox();
-            this.paramList_flPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.formsPlot1 = new ScottPlot.FormsPlot();
-            this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.timeTips_lab);
-            this.panel2.Controls.Add(this.toolTipsShow_cbx);
-            this.panel2.Controls.Add(this.allSelect_cbx);
-            this.panel2.Controls.Add(this.paramList_flPanel);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(2544, 130);
-            this.panel2.TabIndex = 4;
+            timeTips_lab = new System.Windows.Forms.Label();
+            toolTipsShow_cbx = new System.Windows.Forms.CheckBox();
+            allSelect_cbx = new System.Windows.Forms.CheckBox();
+            paramList_flPanel = new System.Windows.Forms.FlowLayoutPanel();
+            formsPlot1 = new ScottPlot.FormsPlot();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            SuspendLayout();
             // 
             // timeTips_lab
             // 
-            this.timeTips_lab.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.timeTips_lab.Location = new System.Drawing.Point(281, 77);
-            this.timeTips_lab.Name = "timeTips_lab";
-            this.timeTips_lab.Size = new System.Drawing.Size(2150, 50);
-            this.timeTips_lab.TabIndex = 15;
-            this.timeTips_lab.Text = "      ";
+            timeTips_lab.Dock = System.Windows.Forms.DockStyle.Fill;
+            timeTips_lab.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            timeTips_lab.Location = new System.Drawing.Point(214, 120);
+            timeTips_lab.Name = "timeTips_lab";
+            timeTips_lab.Size = new System.Drawing.Size(2327, 120);
+            timeTips_lab.TabIndex = 15;
+            timeTips_lab.Text = "      ";
             // 
             // toolTipsShow_cbx
             // 
-            this.toolTipsShow_cbx.AutoSize = true;
-            this.toolTipsShow_cbx.Checked = true;
-            this.toolTipsShow_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolTipsShow_cbx.Location = new System.Drawing.Point(148, 103);
-            this.toolTipsShow_cbx.Name = "toolTipsShow_cbx";
-            this.toolTipsShow_cbx.Size = new System.Drawing.Size(99, 21);
-            this.toolTipsShow_cbx.TabIndex = 14;
-            this.toolTipsShow_cbx.Text = "显示数据提示";
-            this.toolTipsShow_cbx.UseVisualStyleBackColor = true;
-            this.toolTipsShow_cbx.CheckedChanged += new System.EventHandler(this.TooltipsShow_cbx_CheckedChanged);
+            toolTipsShow_cbx.AutoSize = true;
+            toolTipsShow_cbx.Checked = true;
+            toolTipsShow_cbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            toolTipsShow_cbx.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            toolTipsShow_cbx.Location = new System.Drawing.Point(77, 3);
+            toolTipsShow_cbx.Name = "toolTipsShow_cbx";
+            toolTipsShow_cbx.Size = new System.Drawing.Size(125, 25);
+            toolTipsShow_cbx.TabIndex = 14;
+            toolTipsShow_cbx.Text = "显示数据提示";
+            toolTipsShow_cbx.UseVisualStyleBackColor = true;
+            toolTipsShow_cbx.CheckedChanged += TooltipsShow_cbx_CheckedChanged;
             // 
             // allSelect_cbx
             // 
-            this.allSelect_cbx.AutoSize = true;
-            this.allSelect_cbx.Location = new System.Drawing.Point(224, 17);
-            this.allSelect_cbx.Name = "allSelect_cbx";
-            this.allSelect_cbx.Size = new System.Drawing.Size(51, 21);
-            this.allSelect_cbx.TabIndex = 11;
-            this.allSelect_cbx.Text = "全选";
-            this.allSelect_cbx.UseVisualStyleBackColor = true;
-            this.allSelect_cbx.CheckedChanged += new System.EventHandler(this.AllSelect_cbx_CheckedChanged);
+            allSelect_cbx.AutoSize = true;
+            allSelect_cbx.Location = new System.Drawing.Point(141, 3);
+            allSelect_cbx.Name = "allSelect_cbx";
+            allSelect_cbx.Size = new System.Drawing.Size(61, 25);
+            allSelect_cbx.TabIndex = 11;
+            allSelect_cbx.Text = "全选";
+            allSelect_cbx.UseVisualStyleBackColor = true;
+            allSelect_cbx.CheckedChanged += AllSelect_cbx_CheckedChanged;
             // 
             // paramList_flPanel
             // 
-            this.paramList_flPanel.Location = new System.Drawing.Point(281, 12);
-            this.paramList_flPanel.Name = "paramList_flPanel";
-            this.paramList_flPanel.Size = new System.Drawing.Size(2150, 62);
-            this.paramList_flPanel.TabIndex = 7;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(148, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 17);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "数据项选择：";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.formsPlot1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 130);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2544, 1086);
-            this.panel1.TabIndex = 5;
+            paramList_flPanel.AutoScroll = true;
+            paramList_flPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            paramList_flPanel.Location = new System.Drawing.Point(214, 3);
+            paramList_flPanel.Name = "paramList_flPanel";
+            paramList_flPanel.Size = new System.Drawing.Size(2327, 114);
+            paramList_flPanel.TabIndex = 7;
             // 
             // formsPlot1
             // 
-            this.formsPlot1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.formsPlot1.Location = new System.Drawing.Point(0, 0);
-            this.formsPlot1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.formsPlot1.Name = "formsPlot1";
-            this.formsPlot1.Size = new System.Drawing.Size(2544, 1086);
-            this.formsPlot1.TabIndex = 0;
-            this.formsPlot1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormsPlot1_MouseMove);
+            formsPlot1.Dock = System.Windows.Forms.DockStyle.Fill;
+            formsPlot1.Location = new System.Drawing.Point(0, 240);
+            formsPlot1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new System.Drawing.Size(2544, 976);
+            formsPlot1.TabIndex = 0;
+            formsPlot1.MouseMove += FormsPlot1_MouseMove;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.324145F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 91.67586F));
+            tableLayoutPanel1.Controls.Add(timeTips_lab, 1, 1);
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 0);
+            tableLayoutPanel1.Controls.Add(paramList_flPanel, 1, 0);
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(2544, 240);
+            tableLayoutPanel1.TabIndex = 6;
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Controls.Add(allSelect_cbx);
+            flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            flowLayoutPanel1.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new System.Drawing.Size(205, 114);
+            flowLayoutPanel1.TabIndex = 12;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.Controls.Add(toolTipsShow_cbx);
+            flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            flowLayoutPanel2.Location = new System.Drawing.Point(3, 123);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new System.Drawing.Size(205, 114);
+            flowLayoutPanel2.TabIndex = 16;
             // 
             // HistoryChartForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2544, 1216);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
-            this.Name = "HistoryChartForm";
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(2544, 1216);
+            Controls.Add(formsPlot1);
+            Controls.Add(tableLayoutPanel1);
+            Name = "HistoryChartForm";
+            tableLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel2;
         protected System.Windows.Forms.FlowLayoutPanel paramList_flPanel;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox allSelect_cbx;
-        private System.Windows.Forms.Panel panel1;
         protected ScottPlot.FormsPlot formsPlot1;
         protected System.Windows.Forms.Label timeTips_lab;
         private System.Windows.Forms.CheckBox toolTipsShow_cbx;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
     }
 }
 
